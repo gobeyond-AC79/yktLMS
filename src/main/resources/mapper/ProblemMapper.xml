@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.imust.yktlms.mapper.ProblemMapper">
+
+    <resultMap id="BaseResultMap" type="cn.imust.yktlms.entity.Problem">
+        <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
+        <result column="course_id" jdbcType="VARCHAR" property="courseId"/>
+        <result column="student_id" jdbcType="VARCHAR" property="studentId"/>
+        <result column="problem_name" jdbcType="VARCHAR" property="problemName"/>
+        <result column="problem_answer" jdbcType="VARCHAR" property="problemAnswer"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Problem_List">
+        problem_id, course_id, student_id, problem_name, problem_answer, create_time, update_time
+    </sql>
+
+    <select id="selectBycourseId" resultMap="BaseResultMap">
+        select
+        <include refid="Problem_List"/>
+        from problem
+        where course_id = #{courseId,jdbcType=VARCHAR}
+    </select>
+
+</mapper>
