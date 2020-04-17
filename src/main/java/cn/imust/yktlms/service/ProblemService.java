@@ -29,4 +29,11 @@ public interface ProblemService {
      */
     void answerProblem(Problem problem);
 
+    /**
+     * 根据作业号查找
+     * @param problemId
+     * @return
+     */
+    Problem findById(int problemId);
+
 }

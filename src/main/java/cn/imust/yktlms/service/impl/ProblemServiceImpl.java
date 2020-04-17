@@ -33,4 +33,9 @@ public class ProblemServiceImpl implements ProblemService {
     public void answerProblem(Problem problem) {
         problemMapper.updateByPrimaryKeySelective(problem);
     }
+
+    @Override
+    public Problem findById(int problemId) {
+        return problemMapper.selectByPrimaryKey(problemId);
+    }
 }

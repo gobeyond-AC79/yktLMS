@@ -1,11 +1,13 @@
 package cn.imust.yktlms.controller;
 
+import cn.imust.yktlms.dto.ProblemDTO;
 import cn.imust.yktlms.entity.*;
 import cn.imust.yktlms.service.*;
 import cn.imust.yktlms.util.IdGenerateUtil;
 import cn.imust.yktlms.vo.PagingVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,19 +75,6 @@ public class TeacherController {
     }
 
     /**
-     * 课程详情页面中的课程信息
-     * @param map
-     * @param courseId
-     * @return
-     */
-    @GetMapping("/courseDetail")
-    public ModelAndView courseDetail(Map<String,Object> map,String courseId) {
-        Course course = courseService.findByCourseId(courseId);
-        map.put("course",course);
-        return new ModelAndView("teacher/courseDetail",map);
-    }
-
-    /**
      * 当前课程的学生
      * @param map
      * @param courseId
@@ -98,6 +87,8 @@ public class TeacherController {
         for (String studentId :studentIds) {
             studentList.add(studentService.findByStudentId(studentId));
         }
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
         map.put("studentList",studentList);
         return new ModelAndView("teacher/thisCourseStudent",map);
     }
@@ -110,9 +101,35 @@ public class TeacherController {
      */
     @GetMapping("/showProblem")
     public ModelAndView showProblem (Map<String ,Object> map, String courseId) {
-        List<Problem> problemList = problemService.findProblemsByCourseId(courseId);
+        List<Problem> problems = problemService.findProblemsByCourseId(courseId);
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
+        ArrayList<ProblemDTO> problemList = new ArrayList<>();
+        for (Problem p:problems) {
+            ProblemDTO problemDTO = new ProblemDTO();
+            BeanUtils.copyProperties(p,problemDTO);
+            problemDTO.setStudentName(studentService.findByStudentId(p.getStudentId()).getStudentName());
+            problemList.add(problemDTO);
+        }
         map.put("problemList",problemList);
         return new ModelAndView("teacher/showProblem",map);
+    }
+
+    /**
+     * 回答问题界面
+     * @param map
+     * @param problemId
+     * @return
+     */
+    @GetMapping("/answerProblem")
+    public ModelAndView answerProblemUI (Map<String ,Object> map, int problemId) {
+        Problem problem = problemService.findById(problemId);
+        ProblemDTO problemDTO = new ProblemDTO();
+        BeanUtils.copyProperties(problem,problemDTO);
+        problemDTO.setStudentName(studentService.findByStudentId(problem.getStudentId()).getStudentName());
+        map.put("problem",problem);
+        map.put("problemDTO",problemDTO);
+        return new ModelAndView("teacher/answerProblem",map);
     }
 
     /**
@@ -121,9 +138,13 @@ public class TeacherController {
      * @return
      */
     @PostMapping("answerProblem")
-    public String answerProblem(Problem problem) {
+    public ModelAndView answerProblem(Map<String, Object> map,Problem problem) {
         problemService.answerProblem(problem);
-        return "teacher/showProblem";
+        //return "redirect:/teacher/showProblem";
+        Course course = courseService.findByCourseId(problem.getCourseId());
+        map.put("course",course);
+        map.put("courseId",course.getCourseId());
+        return new ModelAndView("redirect:/teacher/showProblem",map);
     }
 
     /**

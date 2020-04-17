@@ -87,10 +87,5 @@
         </div>
     </div>
 </div>
-<div class="container" id="footer">
-    <div class="row">
-        <div class="col-md-12"></div>
-    </div>
-</div>
 </body>
 </html>
