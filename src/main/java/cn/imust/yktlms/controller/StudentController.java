@@ -130,14 +130,38 @@ public class StudentController {
     }
 
     /**
+     * 提交作业页面显示
+     * @param map
+     * @param homeworkId
+     * @return
+     */
+    @GetMapping("/submitHomework")
+    public ModelAndView submitHomeworkUI(Map<String,Object> map,String homeworkId) {
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Homework homework = homeworkService.findById(homeworkId);
+        HomeworkFiles homeworkFiles = homeworkService.findHomeworkFilesByHomeworkIdAndStudentId(homeworkId, user.getUserName());
+        map.put("homeworkFiles",homeworkFiles);
+        map.put("homework",homework);
+        return new ModelAndView("student/submitHomework",map);
+    }
+
+    /**
      * 提交作业
      * @param homeworkFiles
      * @return
      */
     @PostMapping("/submitHomework")
-    public String submitHomework(HomeworkFiles homeworkFiles) {
+    public ModelAndView submitHomework(Map<String,Object> map,HomeworkFiles homeworkFiles) {
+        if (homeworkFiles.getStudentId() == null) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            homeworkFiles.setStudentId(user.getUserName());
+        }
+        String courseId = homeworkService.findById(homeworkFiles.getHomeworkId()).getCourseId();
         homeworkService.addHomeWorkFiles(homeworkFiles);
-        return "student/showHomework";
+        map.put("courseId",courseId);
+        return new ModelAndView("redirect:/student/showHomework",map);
     }
 
     /**

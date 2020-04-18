@@ -22,5 +22,12 @@
         from homeworkfiles
         where homework_id = #{homeworkId,jdbcType=VARCHAR}
     </select>
+    <select id="selectByTwoId" resultMap="BaseResultMap">
+        select
+        <include refid="HomeworkFiles_List"/>
+        from homeworkfiles
+        where homework_id = #{homeworkId,jdbcType=VARCHAR}
+        and student_id = #{studentId,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

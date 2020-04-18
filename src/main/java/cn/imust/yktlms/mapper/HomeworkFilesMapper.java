@@ -12,4 +12,6 @@ import java.util.List;
 @Mapper
 public interface HomeworkFilesMapper extends MyMapper<HomeworkFiles> {
     List<HomeworkFiles> selectByhomeworkId(String homeworkId);
+
+    HomeworkFiles selectByTwoId(String homeworkId, String studentId);
 }

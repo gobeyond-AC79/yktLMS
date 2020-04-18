@@ -39,6 +39,11 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
+    public HomeworkFiles findHomeworkFilesByHomeworkIdAndStudentId(String homeworkId, String studentId) {
+        return homeworkFilesMapper.selectByTwoId(homeworkId,studentId);
+    }
+
+    @Override
     public void addHomeWorkFiles(HomeworkFiles homeworkFiles) {
         homeworkFilesMapper.insert(homeworkFiles);
     }

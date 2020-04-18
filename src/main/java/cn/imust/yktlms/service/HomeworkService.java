@@ -24,6 +24,14 @@ public interface HomeworkService {
     List<HomeworkFiles> findHomeworkFilesByHomeworkId(String homeworkId);
 
     /**
+     * 根据作业号和当前用户查看作业
+     * @param homeworkId
+     * @param studentId
+     * @return
+     */
+    HomeworkFiles findHomeworkFilesByHomeworkIdAndStudentId(String homeworkId,String studentId);
+
+    /**
      * 提交作业
      * @param homeworkFiles
      */
