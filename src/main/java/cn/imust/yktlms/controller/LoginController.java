@@ -95,7 +95,7 @@ public class LoginController {
             if (subject.hasRole("ADMIN")) {
                 return "redirect:/admin/showCourse";
             }else if (subject.hasRole("STUDENT")) {
-                return "mainMenu";
+                return "redirect:/student/showCourse";
             }else if (subject.hasRole("TEACHER")) {
                 return "redirect:/teacher/showCourse";
             }

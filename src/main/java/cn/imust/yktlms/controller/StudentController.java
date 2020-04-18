@@ -1,6 +1,7 @@
 package cn.imust.yktlms.controller;
 
 import cn.imust.yktlms.dto.CourseDTO;
+import cn.imust.yktlms.dto.ProblemDTO;
 import cn.imust.yktlms.entity.*;
 import cn.imust.yktlms.service.*;
 import org.apache.shiro.SecurityUtils;
@@ -23,6 +24,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+
+    @Autowired
+    private StudentService studentService;
 
     @Autowired
     private CourseSelectionService courseSelectionService;
@@ -64,19 +68,6 @@ public class StudentController {
     }
 
     /**
-     * 查看课程详情
-     * @param map
-     * @param courseId
-     * @return
-     */
-    @GetMapping("/courseDeatil")
-    public ModelAndView courseDetail(Map<String,Object> map,String courseId) {
-        Course course = courseService.findByCourseId(courseId);
-        map.put("course",course);
-        return new ModelAndView("student/courseDetail",map);
-    }
-
-    /**
      * 查看对应课程的问题
      * @param map
      * @param courseId
@@ -84,9 +75,25 @@ public class StudentController {
      */
     @GetMapping("/showProblem")
     public ModelAndView showProblem(Map<String,Object> map,String courseId) {
-        List<Problem> problemList = problemService.findProblemsByCourseId(courseId);
+        List<Problem> problems = problemService.findProblemsByCourseId(courseId);
+        Course course = courseService.findByCourseId(courseId);
+        ArrayList<ProblemDTO> problemList = new ArrayList<>();
+        for (Problem p:problems) {
+            ProblemDTO problemDTO = new ProblemDTO();
+            BeanUtils.copyProperties(p,problemDTO);
+            problemDTO.setStudentName(studentService.findByStudentId(p.getStudentId()).getStudentName());
+            problemList.add(problemDTO);
+        }
+        map.put("course",course);
         map.put("problemList",problemList);
         return new ModelAndView("student/showProblem",map);
+    }
+
+    @GetMapping("/addProblem")
+    public ModelAndView createProblemUI(Map<String,Object> map,String courseId) {
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
+        return new ModelAndView("student/addProblem",map);
     }
 
     /**
@@ -95,9 +102,16 @@ public class StudentController {
      * @return
      */
     @PostMapping("/addProblem")
-    public String createProblem(Problem problem) {
+    public ModelAndView createProblem(Map<String,Object> map,Problem problem) {
+        if (problem.getStudentId() == null) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            problem.setStudentId(user.getUserName());
+        }
         problemService.addProblem(problem);
-        return "student/showProblem";
+        Course course = courseService.findByCourseId(problem.getCourseId());
+        map.put("courseId",course.getCourseId());
+        return new ModelAndView("redirect:/student/showProblem",map);
     }
 
     /**
@@ -109,10 +123,17 @@ public class StudentController {
     @GetMapping("/showHomework")
     public ModelAndView showHomework(Map<String,Object> map,String courseId) {
         List<Homework> homeworkList = homeworkService.findHomeworkByCourseId(courseId);
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
         map.put("homeworkList",homeworkList);
         return new ModelAndView("student/showHomework");
     }
 
+    /**
+     * 提交作业
+     * @param homeworkFiles
+     * @return
+     */
     @PostMapping("/submitHomework")
     public String submitHomework(HomeworkFiles homeworkFiles) {
         homeworkService.addHomeWorkFiles(homeworkFiles);

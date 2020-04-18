@@ -1,5 +1,6 @@
 package cn.imust.yktlms.controller;
 
+import cn.imust.yktlms.dto.HomeworkFilesDTO;
 import cn.imust.yktlms.dto.ProblemDTO;
 import cn.imust.yktlms.entity.*;
 import cn.imust.yktlms.service.*;
@@ -9,14 +10,19 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -156,8 +162,45 @@ public class TeacherController {
     @GetMapping("/showHomework")
     public ModelAndView showHomework(Map<String,Object> map,String courseId) {
         List<Homework> homeworkList = homeworkService.findHomeworkByCourseId(courseId);
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
         map.put("homeworkList",homeworkList);
-        return new ModelAndView("teacher/showHomework");
+        return new ModelAndView("teacher/showHomework",map);
+    }
+
+    /**
+     * 查看提交的作业
+     * @param map
+     * @param homeworkId
+     * @return
+     */
+    @GetMapping("/showHomeworkFiles")
+    public ModelAndView showHomeworkFiles(Map<String,Object> map,String homeworkId) {
+        List<HomeworkFiles> homeworkFiles = homeworkService.findHomeworkFilesByHomeworkId(homeworkId);
+        Homework homework = homeworkService.findById(homeworkId);
+        ArrayList<HomeworkFilesDTO> homeworkFilesList = new ArrayList<>();
+        for (HomeworkFiles h:homeworkFiles) {
+            HomeworkFilesDTO homeworkFilesDTO = new HomeworkFilesDTO();
+            BeanUtils.copyProperties(h,homeworkFilesDTO);
+            homeworkFilesDTO.setStudentName(studentService.findByStudentId(h.getStudentId()).getStudentName());
+            homeworkFilesList.add(homeworkFilesDTO);
+        }
+        map.put("homework",homework);
+        map.put("homeworkFilesList",homeworkFilesList);
+        return new ModelAndView("teacher/showHomeworkFiles",map);
+    }
+
+    /**
+     * 布置作业页面
+     * @param map
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/addHomework")
+    public ModelAndView addHomeworkUI(Map<String,Object> map,String courseId) {
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
+        return new ModelAndView("/teacher/addHomework",map);
     }
 
     /**
@@ -166,14 +209,21 @@ public class TeacherController {
      * @return
      */
     @PostMapping("/addHomework")
-    public String addHomework(Homework homework) {
+    public ModelAndView addHomework(Map<String,Object> map,Homework homework) {
         if (homework.getHomeworkId() == null) {
             homework.setHomeworkId(IdGenerateUtil.getHomeworkId());
         }
         homeworkService.addHomework(homework);
-        return "teacher/showHomework";
+        String courseId = courseService.findByCourseId(homework.getCourseId()).getCourseId();
+        map.put("courseId",courseId);
+        return new ModelAndView("redirect:/teacher/showHomework",map);
     }
 
+    /**
+     * 签到
+     * @param request
+     * @param attendance
+     */
     @PostMapping("/attendance")
     public void addAttendance(HttpServletRequest request, Attendance attendance) {
         //没有使用反向代理的情况
@@ -184,6 +234,7 @@ public class TeacherController {
 
     /**
      * 查看一个课程学生的签到情况
+     * 需要修改
      * @param map
      * @param courseId
      * @return
@@ -202,6 +253,18 @@ public class TeacherController {
     @RequestMapping("/passwordRest")
     public String passwordRestUI() {
         return "teacher/passwordRest";
+    }
+
+    /**
+     * 时间转换
+     * @param request
+     * @param binder
+     */
+    @InitBinder
+    protected void init(HttpServletRequest request, ServletRequestDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
     }
 
 }

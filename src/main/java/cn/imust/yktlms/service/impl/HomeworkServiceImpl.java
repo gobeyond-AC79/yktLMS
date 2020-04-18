@@ -48,4 +48,9 @@ public class HomeworkServiceImpl implements HomeworkService {
         return homeworkMapper.selectBycourseId(courseId);
     }
 
+    @Override
+    public Homework findById(String homeworkId) {
+        return homeworkMapper.selectByPrimaryKey(homeworkId);
+    }
+
 }

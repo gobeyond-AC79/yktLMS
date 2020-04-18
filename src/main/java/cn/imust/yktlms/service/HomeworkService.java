@@ -36,4 +36,11 @@ public interface HomeworkService {
      */
     List<Homework> findHomeworkByCourseId(String courseId);
 
+    /**
+     * 通过作业号查看课程
+     * @param homeworkId
+     * @return
+     */
+    Homework findById(String homeworkId);
+
 }
