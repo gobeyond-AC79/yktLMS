@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" action="/student/addProblem" id="editfrom" method="post">
+                    <form class="form-horizontal" role="form" action="/student/submitHomework" id="editfrom" method="post">
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">作业标题</label>
                             <div class="col-sm-10">
@@ -34,13 +34,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputFile" class="col-sm-2 control-label">选择文件</label>
-                            <div class="col-sm-10">
+                            <label for="exampleInputFile" class="col-sm-2 control-label">书写内容</label>
+                            <div class="col-sm-10" id="editor">
                                 <#if (homeworkFiles.homeworkFile)??>
-                                    <#--${homeworkFiles.homeworkFile}-->
-                                    <input type="file" id="exampleInputFile" class="form-control" value="${homeworkFiles.homeworkFile}" />
+                                    ${homeworkFiles.homeworkFile}
+                                    <#--<input type="file" id="exampleInputFile" class="form-control" value="${homeworkFiles.homeworkFile}" />-->
                                     <#else >
-                                        <input type="file" id="exampleInputFile" name="homeworkFile" />
+                                        <#--<input type="file" id="exampleInputFile" name="homeworkFile" />-->
+                                        <textarea style="display: none" name="homeworkFile" id="txtIntro"></textarea>
                                 </#if>
                             </div>
                         </div>
@@ -58,6 +59,25 @@
         </div>
     </div>
 </div>
+
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+<script>
+    var E = window.wangEditor;
+    var editor = new E("#editor");
+    //获取隐藏控件textarea的id，用于数据显示，方便后台获取内容
+    var text = $("#txtIntro");
+    //监控wangEditor中内容的变化，并同步更新到textarea
+    editor.customConfig.onchange = function (html) {
+        text.val(html);
+    }
+    //editor.customConfig.uploadImgServer = "/myFile";
+    editor.customConfig.showLinkImg = false;
+    //editor.customConfig. uploadImgShowBase64 = true;
+    editor.create();
+    //text.val(editor2.text.html());//初始化textarea的值
+</script>
 
 </body>
 </html>

@@ -7,19 +7,21 @@ import cn.imust.yktlms.service.*;
 import cn.imust.yktlms.util.IdGenerateUtil;
 import cn.imust.yktlms.vo.PagingVO;
 import org.apache.shiro.SecurityUtils;
+
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -144,9 +146,9 @@ public class TeacherController {
      * @return
      */
     @PostMapping("answerProblem")
-    public ModelAndView answerProblem(Map<String, Object> map,Problem problem) {
+    public ModelAndView answerProblem(Map<String, Object> map, Problem problem) {
+
         problemService.answerProblem(problem);
-        //return "redirect:/teacher/showProblem";
         Course course = courseService.findByCourseId(problem.getCourseId());
         map.put("course",course);
         map.put("courseId",course.getCourseId());

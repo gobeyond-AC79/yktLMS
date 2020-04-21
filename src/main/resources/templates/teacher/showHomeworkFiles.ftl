@@ -31,7 +31,7 @@
                         <tr>
                             <th>学生姓名</th>
                             <th>作业</th>
-                            <th>操作</th>
+                            <th>作业提交内容</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,7 +40,8 @@
                                 <td>${homeworkFiles.studentName}</td>
                                 <td>${homework.homeworkName}</td>
                                 <td>
-                                    <button class="btn btn-default btn-xs btn-success" onclick="location.href=''">下载</button>
+                                    <#--<button class="btn btn-default btn-xs btn-success" onclick="location.href=''">下载</button>-->
+                                    ${homeworkFiles.homeworkFile}
                                 </td>
                             </tr>
                         </#list>
