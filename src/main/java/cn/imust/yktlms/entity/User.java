@@ -1,7 +1,5 @@
 package cn.imust.yktlms.entity;
 
-import lombok.Data;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -15,6 +13,7 @@ import java.util.Date;
 public class User implements Serializable{
 
 
+    private static final long serialVersionUID = 2185316979667269077L;
     /**
      * 用户名id
      */

@@ -31,13 +31,20 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public void addAttendance(String userIp,Attendance attendance) {
+    public void addAttendance(String userIp,Attendance attendance){
         boolean hasKey = redisUtil.hasKey(userIp);
         if (!hasKey) {
-            redisUtil.listSet(userIp,attendance,40);
+            redisUtil.stringSet(userIp,attendance,40);
         }else{
             throw new YktException(ResultEnum.ATTENDANCE_FAIL);
         }
-        attendanceMapper.updateByPrimaryKeySelective(attendance);
+        Attendance a = attendanceMapper.selectBycourseIdAndStudentId(attendance.getCourseId(), attendance.getStudentId());
+        if (a != null) {
+            a.setAttendanceNumber(a.getAttendanceNumber() + 1);
+            attendanceMapper.updateByPrimaryKeySelective(attendance);
+        }else {
+            attendanceMapper.insert(attendance);
+        }
+
     }
 }

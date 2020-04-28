@@ -6,6 +6,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,23 +78,36 @@ public class RedisUtil {
     }
 
     /**
-     * 将list放入缓存
+     * 将缓存放入并设置时间
      * @param key
      * @param attendance
      * @param time
      * @return
      */
-    public boolean listSet(String key, Attendance attendance,long time) {
+    public boolean stringSet(String key, Attendance attendance, long time) {
         try {
-            redisTemplate.opsForList().rightPush(key,attendance);
             if (time > 0) {
-                expire(key,time);
+                redisTemplate.opsForValue().set(key,attendance,time,TimeUnit.MINUTES);
             }
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 获取全部缓存
+     * @return
+     */
+    public List<Attendance> getRedis() {
+        Set<String> keys = redisTemplate.keys("*");
+        ArrayList<Attendance> list = new ArrayList<>();
+        for (String key:keys) {
+            Object value = redisTemplate.opsForValue().get(key);
+            list.add((Attendance) value);
+        }
+        return list;
     }
 
 }

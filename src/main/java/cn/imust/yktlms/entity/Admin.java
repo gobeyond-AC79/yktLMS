@@ -1,17 +1,16 @@
 package cn.imust.yktlms.entity;
-import	java.util.Date;
-
-import lombok.Data;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author SERENDIPITY
  */
 @Table(name = "admin")
-public class Admin {
+public class Admin implements Serializable {
 
+    private static final long serialVersionUID = -5044119071662031053L;
     /**
      * 管理员用户名
      */

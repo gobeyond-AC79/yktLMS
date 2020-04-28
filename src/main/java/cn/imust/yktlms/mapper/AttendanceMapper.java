@@ -19,4 +19,7 @@ public interface AttendanceMapper extends MyMapper<Attendance> {
      */
     List<Attendance> selectBycourseId(String courseId);
 
+    Attendance selectBycourseIdAndStudentId(String courseId,String studentId);
+
+
 }

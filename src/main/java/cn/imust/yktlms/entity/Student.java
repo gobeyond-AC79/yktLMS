@@ -1,8 +1,7 @@
 package cn.imust.yktlms.entity;
-import lombok.Data;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,8 +9,9 @@ import java.util.Date;
  * @author SERENDIPITY
  */
 @Table(name = "student")
-public class Student {
+public class Student implements Serializable {
 
+    private static final long serialVersionUID = -4537704486711185058L;
     /**
      * 学号
      */

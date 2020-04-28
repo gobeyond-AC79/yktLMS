@@ -145,6 +145,14 @@
             <version>2.4</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.maxmind.geoip2/geoip2 -->
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+
+
         <!--部署外部tomcat容器的组件-->
         <!--<dependency>
             <groupId>org.springframework.boot</groupId>

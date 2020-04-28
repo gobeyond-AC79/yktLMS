@@ -5,23 +5,22 @@ import cn.imust.yktlms.dto.ProblemDTO;
 import cn.imust.yktlms.entity.*;
 import cn.imust.yktlms.service.*;
 import cn.imust.yktlms.util.IdGenerateUtil;
+import cn.imust.yktlms.util.RedisUtil;
 import cn.imust.yktlms.vo.PagingVO;
 import org.apache.shiro.SecurityUtils;
-
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +51,9 @@ public class TeacherController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 课程显示
@@ -222,12 +224,43 @@ public class TeacherController {
     }
 
     /**
+     * 渲染二维码
+     * @param map
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/qrcode")
+    public ModelAndView qrcodeUI(Map<String,Object> map,String courseId) {
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
+        return new ModelAndView("/teacher/qrcodeUI",map);
+    }
+
+    /**
+     * 签到页面显示
+     * @param map
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/attendance")
+    public ModelAndView addAttendanceUI(Map<String,Object> map,String courseId) {
+        Course course = courseService.findByCourseId(courseId);
+        map.put("course",course);
+        return new ModelAndView("/teacher/attendance",map);
+    }
+
+    /**
      * 签到
      * @param request
      * @param attendance
      */
     @PostMapping("/attendance")
     public void addAttendance(HttpServletRequest request, Attendance attendance) {
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Student student = studentService.findByStudentId(user.getUserName());
+        attendance.setStudentId(student.getStudentId());
+        attendance.setStudentName(student.getStudentName());
         //没有使用反向代理的情况
         String serverIp = request.getServerName();
         String userIp = request.getRemoteAddr();
@@ -235,16 +268,15 @@ public class TeacherController {
     }
 
     /**
-     * 查看一个课程学生的签到情况
+     * 查看当前课程哪些学生签到
      * 需要修改
      * @param map
-     * @param courseId
      * @return
      */
     @GetMapping("/attendanceView")
-    public ModelAndView thisCourseAttendance(Map<String,Object> map,String courseId) {
-        List<Attendance> attendanceView = attendanceService.findAllByCourseId(courseId);
-        map.put("attendanceView",attendanceView);
+    public ModelAndView thisCourseAttendance(Map<String,Object> map) {
+        List<Attendance> attendanceRedis = redisUtil.getRedis();
+        map.put("attendanceRedis",attendanceRedis);
         return new ModelAndView("teacher/attendanceView",map);
     }
 

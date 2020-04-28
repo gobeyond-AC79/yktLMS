@@ -1,17 +1,16 @@
 package cn.imust.yktlms.entity;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
-import	java.util.Date;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author SERENDIPITY
  */
 @Table(name = "teacher")
-public class Teacher {
+public class Teacher implements Serializable {
 
+    private static final long serialVersionUID = 1538883497763893726L;
     /**
      * 教工号
      */

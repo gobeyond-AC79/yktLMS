@@ -6,19 +6,28 @@
     <resultMap id="BaseResultMap" type="cn.imust.yktlms.entity.Attendance">
         <id column="attendance_id" jdbcType="INTEGER" property="attendanceId"/>
         <result column="course_id" jdbcType="VARCHAR" property="courseId"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="student_id" jdbcType="VARCHAR" property="studentId"/>
         <result column="student_name" jdbcType="VARCHAR" property="studentName"/>
+        <result column="attendance_number" jdbcType="INTEGER" property="attendanceNumber"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
     <sql id="Attendance_List">
-        attendance_id, course_id, create_time, student_id, student_name
+        attendance_id, course_id, student_id, student_name, attendance_number, create_time, update_time
     </sql>
     <select id="selectBycourseId" resultMap="BaseResultMap">
         select
         <include refid="Attendance_List"/>
         from attendance
         where course_id = #{courseId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectBycourseIdAndStudentId" resultMap="BaseResultMap">
+        select
+        <include refid="Attendance_List"/>
+        from attendance
+        where course_id = #{courseId,jdbcType=VARCHAR}
+        and student_id = #{studentId,jdbcType=VARCHAR}
     </select>
 
 </mapper>

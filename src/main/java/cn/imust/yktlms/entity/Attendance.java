@@ -1,28 +1,23 @@
 package cn.imust.yktlms.entity;
 
-import lombok.Data;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author SERENDIPITY
  */
 @Table(name = "attendance")
-public class Attendance {
+public class Attendance implements Serializable {
 
+    private static final long serialVersionUID = 7186595839760514803L;
     @Id
     private Integer attendanceId;
     /**
      * 课程号
      */
     private String courseId;
-
-    /**
-     * 签到时间
-     */
-    private Date createTime;
 
     /**
      * 学生学号
@@ -34,15 +29,32 @@ public class Attendance {
      */
     private String studentName;
 
-    public Attendance(Integer attendanceId, String courseId, Date createTime, String studentId, String studentName) {
-        this.attendanceId = attendanceId;
-        this.courseId = courseId;
-        this.createTime = createTime;
-        this.studentId = studentId;
-        this.studentName = studentName;
-    }
+    /**
+     * 签到次数
+     */
+    private Integer attendanceNumber;
+
+    /**
+     * 签到时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
 
     public Attendance() {
+    }
+
+    public Attendance(Integer attendanceId, String courseId, String studentId, String studentName, Integer attendanceNumber, Date createTime, Date updateTime) {
+        this.attendanceId = attendanceId;
+        this.courseId = courseId;
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.attendanceNumber = attendanceNumber;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
     }
 
     public Integer getAttendanceId() {
@@ -61,14 +73,6 @@ public class Attendance {
         this.courseId = courseId;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getStudentId() {
         return studentId;
     }
@@ -83,5 +87,29 @@ public class Attendance {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public Integer getAttendanceNumber() {
+        return attendanceNumber;
+    }
+
+    public void setAttendanceNumber(Integer attendanceNumber) {
+        this.attendanceNumber = attendanceNumber;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

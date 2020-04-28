@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 /**
+ * 百度API
+ * 只能获取到城市的经纬度（舍弃）
  * @author SERENDIPITY
  */
 public class LatAndLngUtil {

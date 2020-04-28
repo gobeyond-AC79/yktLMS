@@ -1,18 +1,18 @@
 package cn.imust.yktlms.entity;
-import lombok.Data;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * 角色实体类
  * @author SERENDIPITY
  */
 @Table(name = "role")
-public class Role {
+public class Role implements Serializable {
 
+    private static final long serialVersionUID = -6297674860667514743L;
     /**
      * 角色id
      */
