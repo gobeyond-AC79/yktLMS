@@ -1,4 +1,7 @@
 package cn.imust.yktlms.entity;
+import cn.imust.yktlms.annotations.CreateTime;
+import cn.imust.yktlms.annotations.UpdateTime;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -37,11 +40,13 @@ public class Problem implements Serializable {
     /**
      * 创建时间
      */
+    @CreateTime
     private Date createTime;
 
     /**
      * 回答时间
      */
+    @UpdateTime
     private Date updateTime;
 
     public Problem(Integer problemId, String courseId, String studentId, String problemName, String problemAnswer, Date createTime, Date updateTime) {

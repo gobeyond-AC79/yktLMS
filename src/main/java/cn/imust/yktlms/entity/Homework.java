@@ -1,4 +1,6 @@
 package cn.imust.yktlms.entity;
+import cn.imust.yktlms.annotations.CreateTime;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -30,6 +32,7 @@ public class Homework implements Serializable {
     /**
      * 创建时间
      */
+    @CreateTime
     private Date createTime;
 
     /**

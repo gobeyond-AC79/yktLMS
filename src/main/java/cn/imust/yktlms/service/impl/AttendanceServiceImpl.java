@@ -43,6 +43,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             a.setAttendanceNumber(a.getAttendanceNumber() + 1);
             attendanceMapper.updateByPrimaryKeySelective(attendance);
         }else {
+            attendance.setAttendanceNumber(1);
             attendanceMapper.insert(attendance);
         }
 

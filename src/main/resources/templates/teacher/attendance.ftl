@@ -9,6 +9,7 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<#include "top.ftl">
 <!-- 中间主体 -->
 <div class="container" id="content">
     <div class="row">

@@ -1,4 +1,7 @@
 package cn.imust.yktlms.entity;
+import cn.imust.yktlms.annotations.CreateTime;
+import cn.imust.yktlms.annotations.UpdateTime;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -56,11 +59,13 @@ public class Student implements Serializable {
     /**
      * 创建时间
      */
+    @CreateTime
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @UpdateTime
     private Date updateTime;
 
     public Student(String studentId, String studentName, String studentSex, Date studentBirthday, String studentSpecialty, String studentPhone, String studentEmail, Integer studentStatus, Date createTime, Date updateTime) {

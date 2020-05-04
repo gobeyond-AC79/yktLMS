@@ -1,5 +1,7 @@
 package cn.imust.yktlms.entity;
 
+import cn.imust.yktlms.annotations.CreateTime;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -27,6 +29,7 @@ public class CourseSelection implements Serializable {
     /**
      * 创建时间
      */
+    @CreateTime
     private Date createTime;
 
     public CourseSelection(Integer selectionId, String courseId, String studentId, Date createTime) {

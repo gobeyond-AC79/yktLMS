@@ -1,4 +1,7 @@
 package cn.imust.yktlms.entity;
+import cn.imust.yktlms.annotations.CreateTime;
+import cn.imust.yktlms.annotations.UpdateTime;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -35,11 +38,13 @@ public class Admin implements Serializable {
     /**
      * 创建时间
      */
+    @CreateTime
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @UpdateTime
     private Date updateTime;
 
     public Admin(String adminId, String adminName, Integer adminPhone, Integer adminStatus, Date createTime, Date updateTime) {

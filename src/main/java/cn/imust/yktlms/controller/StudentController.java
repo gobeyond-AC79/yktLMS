@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -126,6 +127,7 @@ public class StudentController {
         Course course = courseService.findByCourseId(courseId);
         map.put("course",course);
         map.put("homeworkList",homeworkList);
+        homeworkList.removeIf(c -> c.getStopTime().after(new Date()));
         return new ModelAndView("student/showHomework");
     }
 

@@ -45,7 +45,7 @@ spring:
       exclude: templates/**
   redis:
     database: 0
-    host: 192.168.129.129
+    host: 192.168.86.132
     port: 6379
     password: 123456
     jedis:

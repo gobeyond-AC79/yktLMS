@@ -33,7 +33,7 @@
     $('#qrcode').qrcode({
         size: 350,
         fill: '#1C1C1C',
-        text: 'https://192.168.1.7:8080/teacher/attendance?courseId=${course.courseId}'
+        text: 'http://192.168.1.7:8080/teacher/attendance?courseId=${course.courseId}'
     });
 </script>
 

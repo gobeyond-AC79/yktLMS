@@ -1,5 +1,8 @@
 package cn.imust.yktlms.entity;
 
+import cn.imust.yktlms.annotations.CreateTime;
+import cn.imust.yktlms.annotations.UpdateTime;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -35,13 +38,15 @@ public class Attendance implements Serializable {
     private Integer attendanceNumber;
 
     /**
-     * 签到时间
+     * 第一次签到时间
      */
+    @CreateTime
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @UpdateTime
     private Date updateTime;
 
     public Attendance() {
