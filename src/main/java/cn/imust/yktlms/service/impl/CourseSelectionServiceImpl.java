@@ -49,6 +49,7 @@ public class CourseSelectionServiceImpl implements CourseSelectionService {
         courseSelection.setCourseId(courseId);
         courseSelection.setStudentId(studentId);
         courseSelectionMapper.insert(courseSelection);
+
     }
 
     @Override

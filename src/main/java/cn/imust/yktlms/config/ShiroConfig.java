@@ -52,6 +52,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**","anon");
         filterChainDefinitionMap.put("/login","anon");
         filterChainDefinitionMap.put("/getCode","anon");
+        //filterChainDefinitionMap.put("/teacher/attendance","anon");
 
         //配置退出过滤器
         filterChainDefinitionMap.put("/logout","logout");

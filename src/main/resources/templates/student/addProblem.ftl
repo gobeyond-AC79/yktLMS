@@ -17,7 +17,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <h1 style="text-align: center;">布置作业</h1>
+                        <h1 style="text-align: center;">答疑提问</h1>
                     </div>
                 </div>
                 <div class="panel-body">

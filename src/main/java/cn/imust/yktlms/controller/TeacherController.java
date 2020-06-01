@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -255,7 +252,7 @@ public class TeacherController {
      * @param attendance
      */
     @PostMapping("/attendance")
-    public void addAttendance(HttpServletRequest request, Attendance attendance) {
+    public ModelAndView addAttendance(HttpServletRequest request, Attendance attendance,Map<String,Object> map) {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         Student student = studentService.findByStudentId(user.getUserName());
@@ -264,7 +261,15 @@ public class TeacherController {
         //没有使用反向代理的情况
         String serverIp = request.getServerName();
         String userIp = request.getRemoteAddr();
-        attendanceService.addAttendance(userIp,attendance);
+        boolean hasKey = redisUtil.hasKey(userIp);
+        if (!hasKey) {
+            redisUtil.stringSet(userIp,attendance,40);
+        }else{
+            map.put("message","该设备已经签到过了！");
+            return new ModelAndView("/common/error",map);
+        }
+        attendanceService.addAttendance(attendance);
+        return new ModelAndView("/common/success");
     }
 
     /**
@@ -278,6 +283,17 @@ public class TeacherController {
         List<Attendance> attendanceRedis = redisUtil.getRedis();
         map.put("attendanceRedis",attendanceRedis);
         return new ModelAndView("teacher/attendanceView",map);
+    }
+
+
+    @GetMapping("/attendanceMap")
+    @ResponseBody
+    public ModelAndView attendanceMap(String courseId,Map<String,Object> map) {
+        List<Attendance> attendanceList = attendanceService.findAllByCourseId(courseId);
+        Course course = courseService.findByCourseId(courseId);
+        map.put("attendanceList",attendanceList);
+        map.put("course",course);
+        return new ModelAndView("teacher/attendanceMap",map);
     }
 
     /**

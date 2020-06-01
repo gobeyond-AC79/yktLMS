@@ -8,6 +8,12 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import java.util.Collections;
+
 /**
  * 启动类配置
  * @author SERENDIPITY
@@ -20,6 +26,14 @@ public class YktlmsApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(YktlmsApplication.class);
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+        servletContext.setSessionTrackingModes(Collections.singleton(SessionTrackingMode.COOKIE));
+        SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+        sessionCookieConfig.setHttpOnly(true);
     }
 
     public static void main(String[] args) {

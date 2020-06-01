@@ -1,8 +1,6 @@
 package cn.imust.yktlms.service.impl;
 
 import cn.imust.yktlms.entity.Attendance;
-import cn.imust.yktlms.enums.ResultEnum;
-import cn.imust.yktlms.exception.YktException;
 import cn.imust.yktlms.mapper.AttendanceMapper;
 import cn.imust.yktlms.service.AttendanceService;
 import cn.imust.yktlms.util.RedisUtil;
@@ -31,21 +29,23 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public void addAttendance(String userIp,Attendance attendance){
-        boolean hasKey = redisUtil.hasKey(userIp);
-        if (!hasKey) {
-            redisUtil.stringSet(userIp,attendance,40);
-        }else{
-            throw new YktException(ResultEnum.ATTENDANCE_FAIL);
-        }
+    public void addAttendance(Attendance attendance){
+        //这块放到前端返回错误页面
+
         Attendance a = attendanceMapper.selectBycourseIdAndStudentId(attendance.getCourseId(), attendance.getStudentId());
         if (a != null) {
-            a.setAttendanceNumber(a.getAttendanceNumber() + 1);
-            attendanceMapper.updateByPrimaryKeySelective(attendance);
+            a.setAttendanceNumber(a.getAttendanceNumber()+1);
+            attendanceMapper.updateByPrimaryKeySelective(a);
         }else {
             attendance.setAttendanceNumber(1);
             attendanceMapper.insert(attendance);
         }
 
+    }
+
+    @Override
+    public void deleteAttendance(String courseId, String studentId) {
+        Attendance attendance = attendanceMapper.selectBycourseIdAndStudentId(courseId, studentId);
+        attendanceMapper.delete(attendance);
     }
 }

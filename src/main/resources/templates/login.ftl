@@ -110,6 +110,30 @@
             font-weight: 300;
         }
     </style>
+
+    <script>
+        function check(form) {
+            var username = form.userName.value;
+            if (username.length === 0) {
+                alert("用户名为空！请输入用户名");
+                form.userName.focus();
+                return false;
+            }
+            var password = form.userPassword.value;
+            if (password.length === 0) {
+                alert("密码为空！请输入密码");
+                form.userPassword.focus();
+                return false;
+            }
+            var verifyCode = form.verifyCode.value;
+            if (verifyCode.length === 0) {
+                alert("验证码不能为空！");
+                form.verifyCode.focus();
+                return false;
+            }
+        }
+    </script>
+
 </head>
 <body>
 <!-- 登录界面 -->
@@ -120,7 +144,7 @@
     </div>
     <!-- 头像 -->
     <div class="pic"></div>
-    <form class="form-horizontal" role="form" action="/login" id="from" method="post">
+    <form class="form-horizontal" role="form" action="/login" id="from" method="post" onSubmit="return check(this)">
         <div class="msg">
             <#--span标签-->
             <!-- 账号 -->
@@ -150,6 +174,7 @@
     function refreshCode() {
         document.getElementById("verifyCode").setAttribute("src","/getCode");
     }
+
 </script>
 
 </body>

@@ -18,9 +18,15 @@ public interface AttendanceService {
 
     /**
      * 记录签到信息
-     * @param userIp
      * @param attendance
      */
-    void addAttendance(String userIp,Attendance attendance);
+    void addAttendance(Attendance attendance);
+
+    /**
+     * 删除签到信息
+     * @param courseId
+     * @param studentId
+     */
+    void deleteAttendance(String courseId,String studentId);
 
 }

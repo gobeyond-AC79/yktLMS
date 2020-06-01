@@ -1,20 +1,13 @@
 package cn.imust.yktlms.controller;
 
 import cn.imust.yktlms.dto.CourseDTO;
-import cn.imust.yktlms.entity.Course;
-import cn.imust.yktlms.entity.Student;
-import cn.imust.yktlms.entity.Teacher;
-import cn.imust.yktlms.entity.User;
+import cn.imust.yktlms.entity.*;
 import cn.imust.yktlms.enums.ResultEnum;
 import cn.imust.yktlms.enums.RoleEnum;
 import cn.imust.yktlms.exception.YktException;
 import cn.imust.yktlms.service.*;
 import cn.imust.yktlms.util.IdGenerateUtil;
-import cn.imust.yktlms.util.PasswordGenerateUtil;
 import cn.imust.yktlms.vo.PagingVO;
-import com.sun.org.apache.regexp.internal.RE;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -32,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 管理员
@@ -56,6 +48,9 @@ public class AdminController {
 
     @Autowired
     private CourseSelectionService courseSelectionService;
+
+    @Autowired
+    private AttendanceService attendanceService;
 
     /*-------------------------------------------------课程操作-------------------------------------------------------*/
 
@@ -125,11 +120,11 @@ public class AdminController {
         Boolean result = courseService.addCourse(course);
         if (!result) {
             map.put("message","课程已存在");
-            map.put("url","admin/showCourse");
+            map.put("url","showCourse");
             return new ModelAndView("common/error",map);
         }
         //重定向
-        return new ModelAndView("redirect:/showCourse");
+        return new ModelAndView("redirect:/admin/showCourse");
     }
 
     /**
@@ -286,13 +281,19 @@ public class AdminController {
      * @return
      */
     @GetMapping("/removeTeacher")
-    public String removeTeacher(String teacherId) {
+    public ModelAndView removeTeacher(String teacherId,Map<String,Object> map) {
         if (teacherId == null) {
             //没有带id进来的话就返回教师列表页面
-            return "redirect:/admin/showTeacher";
+            return new ModelAndView("redirect:/admin/showTeacher");
         }
-        teacherService.removeByTeacherId(teacherId);
-        return "redirect:/admin/showTeacher";
+        if((courseService.findByTeacherId(teacherId)) != null) {
+            map.put("message","该教师当前正在授课，不可删除");
+            map.put("url","showTeacher");
+            return new ModelAndView("common/error",map);
+        }else {
+            teacherService.removeByTeacherId(teacherId);
+            return new ModelAndView("redirect:/admin/showTeacher");
+        }
     }
 
     /**
@@ -467,6 +468,13 @@ public class AdminController {
     @PostMapping("/addCourseToStudent")
     public ModelAndView addCourseToStudent(Map<String,Object> map,String studentId,String courseId) {
         courseSelectionService.addCourseToStudent(courseId,studentId);
+        Student student = studentService.findByStudentId(studentId);
+        Attendance attendance = new Attendance();
+        attendance.setCourseId(courseId);
+        attendance.setStudentId(studentId);
+        attendance.setStudentName(student.getStudentName());
+        attendance.setAttendanceNumber(0);
+        attendanceService.addAttendance(attendance);
         map.put("studentId",studentId);
         return new ModelAndView("redirect:/admin/addCourseToStudent",map);
     }
@@ -484,6 +492,7 @@ public class AdminController {
             return new ModelAndView("redirect:/admin/showCourse");
         }
         courseSelectionService.removeCourseToStudent(studentId,courseId);
+        attendanceService.deleteAttendance(studentId,courseId);
         map.put("studentId",studentId);
         return new ModelAndView("redirect:/admin/addCourseToStudent",map);
     }

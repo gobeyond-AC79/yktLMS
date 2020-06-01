@@ -8,6 +8,8 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +31,7 @@ import java.io.IOException;
  * @author SERENDIPITY
  */
 @Controller
-public class LoginController {
+public class LoginController{
 
     /**
      * session中的验证码
@@ -69,7 +71,8 @@ public class LoginController {
                         @RequestParam("userPassword") String userPassword,
                         @RequestParam(value = "verifyCode" , required = false)String verifyCode,
                         @RequestParam(value = "rememberMe" , required = false) boolean rememberMe,
-                        Model model) throws Exception {
+                        Model model,
+                        HttpServletRequest request) throws Exception {
         //shiro实现登录
         UsernamePasswordToken token = new UsernamePasswordToken(userName, userPassword);
         Subject subject = SecurityUtils.getSubject();
@@ -92,12 +95,19 @@ public class LoginController {
         }
         if (subject.isAuthenticated()) {
             model.addAttribute("userName", userName);
-            if (subject.hasRole("ADMIN")) {
-                return "redirect:/admin/showCourse";
-            }else if (subject.hasRole("STUDENT")) {
-                return "redirect:/student/showCourse";
-            }else if (subject.hasRole("TEACHER")) {
-                return "redirect:/teacher/showCourse";
+            SavedRequest savedRequest = WebUtils.getSavedRequest(request);
+            System.out.println("url:"+savedRequest.getRequestUrl());
+            if (!"/".equals(savedRequest.getRequestUrl()) && !"/favicon.ico".equals(savedRequest.getRequestUrl())) {
+                return "redirect://192.168.1.7:8080/"+savedRequest.getRequestUrl();
+            }else if (savedRequest.getRequestUrl() == null || "/".equals(savedRequest.getRequestUrl()) || "/favicon.ico".equals(savedRequest.getRequestUrl())){
+                savedRequest.getRequestUrl();
+                if (subject.hasRole("ADMIN")) {
+                    return "redirect:/admin/showCourse";
+                } else if (subject.hasRole("STUDENT")) {
+                    return "redirect:/student/showCourse";
+                } else if (subject.hasRole("TEACHER")) {
+                    return "redirect:/teacher/showCourse";
+                }
             }
         }else {
             return ERROR_CODE_URL;

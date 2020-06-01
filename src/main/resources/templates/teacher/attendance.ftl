@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" action="" id="editfrom" method="post">
+                    <form class="form-horizontal" role="form" action="/teacher/attendance" id="editfrom" method="post">
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-2 control-label">课程名称</label>
                             <div class="col-sm-10">
