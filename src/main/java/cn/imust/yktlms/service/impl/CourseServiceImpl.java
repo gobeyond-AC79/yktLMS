@@ -37,6 +37,7 @@ public class CourseServiceImpl implements CourseService {
     public Boolean removeCourseByCourseId(String courseId) {
         Course course = courseMapper.selectByPrimaryKey(courseId);
         if (course.getCourseStatus().equals(StatusEnum.NORMAL_STATUS.getCode())) {
+            course.setTeacherId(null);
             course.setCourseStatus(StatusEnum.ERROR_STATUS.getCode());
             courseMapper.updateByPrimaryKey(course);
             return true;

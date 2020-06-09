@@ -4,11 +4,13 @@ import cn.imust.yktlms.exception.YktException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @author SERENDIPITY
  * @Date 2020/5/12 21:22
  */
+@RestControllerAdvice
 public class DefaultExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(DefaultExceptionHandler.class);
 

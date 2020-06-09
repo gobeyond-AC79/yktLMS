@@ -185,7 +185,11 @@ public class AdminController {
     @RequestMapping("/selectCourse")
     private ModelAndView selectCourse(String courseName,Map<String,Object> map) {
         List<Course> courseList = courseService.findByCourseName(courseName);
-        //TODO 没找到的错误信息
+        if (courseList == null) {
+            map.put("message","查找信息有误！");
+            map.put("url","showCourse");
+            return new ModelAndView("common/error",map);
+        }
         map.put("courseList",courseList);
         return new ModelAndView("admin/showCourse",map);
     }
@@ -305,6 +309,11 @@ public class AdminController {
     @PostMapping("/selectTeacher")
     private ModelAndView selectTeacher(String teacherName,Map<String,Object> map) {
         List<Teacher> teacherList = teacherService.findByTeacherName(teacherName);
+        if (teacherList == null) {
+            map.put("message","查找信息有误！");
+            map.put("url","showTeacher");
+            return new ModelAndView("common/error",map);
+        }
         map.put("teacherList",teacherList);
         return new ModelAndView("admin/showTeacher",map);
     }
@@ -420,6 +429,11 @@ public class AdminController {
     private ModelAndView selectStudent(String studentName,Map<String,Object> map) {
         List<Student> studentList = studentService.findByStudentName(studentName);
         map.put("studentList",studentList);
+        if (studentList == null) {
+            map.put("message","查找信息有误！");
+            map.put("url","showStudent");
+            return new ModelAndView("common/error",map);
+        }
         return new ModelAndView("admin/showStudent",map);
     }
 
