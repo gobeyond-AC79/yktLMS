@@ -98,7 +98,7 @@ public class LoginController{
             SavedRequest savedRequest = WebUtils.getSavedRequest(request);
             System.out.println("url:"+savedRequest.getRequestUrl());
             if (!"/".equals(savedRequest.getRequestUrl()) && !"/favicon.ico".equals(savedRequest.getRequestUrl())) {
-                return "redirect://192.168.1.7:8080/"+savedRequest.getRequestUrl();
+                return "redirect://192.168.31.9:8080/"+savedRequest.getRequestUrl();
             }else if (savedRequest.getRequestUrl() == null || "/".equals(savedRequest.getRequestUrl()) || "/favicon.ico".equals(savedRequest.getRequestUrl())){
                 savedRequest.getRequestUrl();
                 if (subject.hasRole("ADMIN")) {

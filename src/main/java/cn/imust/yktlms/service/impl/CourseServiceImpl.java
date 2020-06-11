@@ -84,7 +84,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findAll() {
-        return courseMapper.selectAll();
+        //return courseMapper.selectAll();
+        return courseMapper.selectAllCourse();
     }
 
 }

@@ -28,4 +28,6 @@ public interface CourseMapper extends MyMapper<Course> {
     List<Course> selectByteacherId(String teacherId);
 
     int countCourseNumber();
+
+    List<Course> selectAllCourse();
 }

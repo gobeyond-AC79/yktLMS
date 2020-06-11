@@ -33,7 +33,7 @@
         select
         <include refid="Course_List"/>
         from course
-        where course_name like '%#{courseName,jdbcType=VARCHAR}%'
+        where course_name like concat('%',#{courseName,jdbcType=VARCHAR},'%')
         and course_status = '1'
     </select>
     <select id="selectByteacherId" resultMap="BaseResultMap">
@@ -45,6 +45,13 @@
     </select>
     <select id="countCourseNumber" resultType="java.lang.Integer">
         select count(*) from course
+        where course_status = '1'
+    </select>
+
+    <select id="selectAllCourse" resultMap="BaseResultMap">
+        select
+        <include refid="Course_List"/>
+        from course
         where course_status = '1'
     </select>
 

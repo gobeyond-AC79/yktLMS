@@ -1,6 +1,5 @@
 package cn.imust.yktlms.service.impl;
 
-import cn.imust.yktlms.vo.PagingVO;
 import cn.imust.yktlms.entity.Teacher;
 import cn.imust.yktlms.entity.User;
 import cn.imust.yktlms.enums.RoleEnum;
@@ -8,7 +7,7 @@ import cn.imust.yktlms.enums.StatusEnum;
 import cn.imust.yktlms.mapper.TeacherMapper;
 import cn.imust.yktlms.service.TeacherService;
 import cn.imust.yktlms.service.UserService;
-import com.alibaba.druid.support.spring.stat.annotation.Stat;
+import cn.imust.yktlms.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +72,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher findByTeacherId(String teacherId) {
-        Teacher teacher = teacherMapper.selectByPrimaryKey(teacherId);
+        //Teacher teacher = teacherMapper.selectByPrimaryKey(teacherId);
+        Teacher teacher = teacherMapper.selectByTeacherId(teacherId);
         if (teacher .getTeacherStatus().equals(StatusEnum.NORMAL_STATUS.getCode())) {
             return teacher;
         }

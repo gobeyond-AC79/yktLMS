@@ -41,4 +41,12 @@
         and teacher_name = '%#{teacherName,jdbcType=VARCHAR}%'
     </select>
 
+    <select id="selectByTeacherId" resultMap="BaseResultMap">
+        select
+        <include refid="Teacher_List"/>
+        from teacher
+        where teacher_id = #{teacherId,jdbcType=VARCHAR}
+        and teacher_status = '1'
+    </select>
+
 </mapper>

@@ -173,6 +173,10 @@ public class AdminController {
             return "redirect:/admin/showCourse";
         }
         courseService.removeCourseByCourseId(courseId);
+        List<String> studentIdByCourseId = courseSelectionService.findStudentIdByCourseId(courseId);
+        for (String studentId:studentIdByCourseId) {
+            courseSelectionService.removeCourseToStudent(studentId,courseId);
+        }
         return "redirect:/admin/showCourse";
     }
 
@@ -185,7 +189,7 @@ public class AdminController {
     @RequestMapping("/selectCourse")
     private ModelAndView selectCourse(String courseName,Map<String,Object> map) {
         List<Course> courseList = courseService.findByCourseName(courseName);
-        if (courseList == null) {
+        if (courseList.size() == 0) {
             map.put("message","查找信息有误！");
             map.put("url","showCourse");
             return new ModelAndView("common/error",map);

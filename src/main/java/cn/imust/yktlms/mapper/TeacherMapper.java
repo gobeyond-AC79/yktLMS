@@ -23,4 +23,6 @@ public interface TeacherMapper extends MyMapper<Teacher> {
     int countTeacherNumber();
 
     List<Teacher> findByTeacherName(String teacherName);
+
+    Teacher selectByTeacherId(String teacherId);
 }

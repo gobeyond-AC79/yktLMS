@@ -38,13 +38,18 @@
 </div>
 <div id="qrcode" ></div>
 <a href="/teacher/attendanceView"><h4>已签到同学名单</h4></a>
+<div class="form-group">
+    <div class="form-group" style="text-align: center">
+        <button class="btn btn-default " value="GO" onclick="location.href='/teacher/showCourse'">返回</button>
+    </div>
+</div>
 <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script>
     $('#qrcode').qrcode({
         size: 350,
         fill: '#1C1C1C',
-        text: 'http://192.168.1.7:8080/teacher/attendance?courseId=${course.courseId}'
+        text: 'http://192.168.31.9:8080/teacher/attendance?courseId=${course.courseId}'
     });
 </script>
 

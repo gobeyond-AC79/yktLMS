@@ -254,6 +254,10 @@ public class TeacherController {
     @PostMapping("/attendance")
     public ModelAndView addAttendance(HttpServletRequest request, Attendance attendance,Map<String,Object> map) {
         Subject subject = SecurityUtils.getSubject();
+        if (!subject.hasRole("STUDENT")) {
+            map.put("message","非学生用户不可以签到");
+            return new ModelAndView("/common/error",map);
+        }
         User user = (User) subject.getPrincipal();
         Student student = studentService.findByStudentId(user.getUserName());
         attendance.setStudentId(student.getStudentId());
