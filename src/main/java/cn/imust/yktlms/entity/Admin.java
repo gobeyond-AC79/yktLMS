@@ -11,7 +11,7 @@ import java.util.Date;
  * @author SERENDIPITY
  */
 @Table(name = "admin")
-public class Admin implements Serializable {
+public class  Admin implements Serializable {
 
     private static final long serialVersionUID = -5044119071662031053L;
     /**

@@ -37,6 +37,8 @@ public interface HomeworkService {
      */
     void addHomeWorkFiles(HomeworkFiles homeworkFiles);
 
+    void updateHomeWorkFiles(HomeworkFiles homeworkFiles);
+
     /**
      * 通过课程号找到对应的作业
      * @param courseId

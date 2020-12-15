@@ -127,7 +127,7 @@ public class StudentController {
         Course course = courseService.findByCourseId(courseId);
         map.put("course",course);
         map.put("homeworkList",homeworkList);
-        homeworkList.removeIf(c -> c.getStopTime().after(new Date()));
+        homeworkList.removeIf(c -> c.getStopTime().before(new Date()));
         return new ModelAndView("student/showHomework");
     }
 
@@ -155,13 +155,17 @@ public class StudentController {
      */
     @PostMapping("/submitHomework")
     public ModelAndView submitHomework(Map<String,Object> map,HomeworkFiles homeworkFiles) {
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
         if (homeworkFiles.getStudentId() == null) {
-            Subject subject = SecurityUtils.getSubject();
-            User user = (User) subject.getPrincipal();
             homeworkFiles.setStudentId(user.getUserName());
         }
         String courseId = homeworkService.findById(homeworkFiles.getHomeworkId()).getCourseId();
-        homeworkService.addHomeWorkFiles(homeworkFiles);
+        if (homeworkService.findHomeworkFilesByHomeworkIdAndStudentId(homeworkFiles.getHomeworkId(),user.getUserName()) != null){
+            homeworkService.updateHomeWorkFiles(homeworkFiles);
+        }else{
+            homeworkService.addHomeWorkFiles(homeworkFiles);
+        }
         map.put("courseId",courseId);
         return new ModelAndView("redirect:/student/showHomework",map);
     }

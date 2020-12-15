@@ -49,6 +49,11 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
+    public void updateHomeWorkFiles(HomeworkFiles homeworkFiles) {
+        homeworkFilesMapper.updateByPrimaryKeySelective(homeworkFiles);
+    }
+
+    @Override
     public List<Homework> findHomeworkByCourseId(String courseId) {
         return homeworkMapper.selectBycourseId(courseId);
     }
